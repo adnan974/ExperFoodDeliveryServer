@@ -17,6 +17,14 @@ app.use(bodyParser.json());
 const api = express.Router();
 const auth = express.Router();
 
+
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Headers, Authorization, X-Requested-With');
+    next();
+});
+
+
 auth.post('/login', (req,res)=> {   
     if (req.body && req.body.email && req.body.password) {     
         const email = req.body.email.toLocaleLowerCase();
