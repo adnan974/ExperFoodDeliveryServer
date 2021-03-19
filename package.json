@@ -1,0 +1,25 @@
+{
+  "name": "server-exper-food-delivery",
+  "version": "1.0.0",
+  "description": "api exper food delivery",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/Borris974/server-exper-food-delivery.git"
+  },
+  "author": "Adnan, Mumu & Borris",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/Borris974/server-exper-food-delivery/issues"
+  },
+  "homepage": "https://gitlab.com/Borris974/server-exper-food-delivery#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1"
+  }
+}
