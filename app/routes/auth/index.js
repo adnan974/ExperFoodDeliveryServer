@@ -3,28 +3,30 @@ const jwt = require('jsonwebtoken');
 const config = require('../../../config');
 const {UserRepository} = require("../../repositories/");
 
-const userTest = {
-    id:1, firstname : 'John', 
-    lastname:'DOE',
-    email:'test@email.com', 
-    password : '1234', 
-    address:'124 allée des cocos', 
-    cp:'97450', 
-    city:'Saint-Louis'
-};
+// const userTest = {
+//     id:1, firstname : 'John', 
+//     lastname:'DOE',
+//     email:'test@email.com', 
+//     password : '1234', 
+//     address:'124 allée des cocos', 
+//     cp:'97450', 
+//     city:'Saint-Louis'
+// };
 
 
 AuthRouter.route("/login")
-    .post((req, res) => {
+    .post(async (req, res) => {
         if (req.body && req.body.email && req.body.password) {
+            
+            
             const email = req.body.email.toLocaleLowerCase();
             const password = req.body.password;
+            const user = await UserRepository.findOne({email})
     
-            if (userTest.email === email && userTest.password === password) {
-                
-                delete req.body.password;
-                const token = jwt.sign({ iss: 'http://localhost:5000', role: 'customer' }, config.secret);
-                res.json({ success: true, data: userTest, token });
+            if (user) {                
+                delete user.password;
+                const token = jwt.sign({ iss: 'http://localhost:5000', role: user.role }, config.secret);
+                res.json({ success: true, data: user, token });
     
             } else {
                 res.json({ success: false, message: "invalid credentials" });
