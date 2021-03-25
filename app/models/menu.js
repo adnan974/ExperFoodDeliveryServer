@@ -2,9 +2,9 @@
 module.exports = (mongoose) => {
 
     return mongoose && mongoose.model('Menu', mongoose.Schema({
-        name: String,
-        description: String,
-        price: Number,
+        _name: String,
+        _description: String,
+        _price: Number,
         restaurant: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Restaurant"

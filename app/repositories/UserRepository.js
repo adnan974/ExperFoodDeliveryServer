@@ -14,16 +14,16 @@ module.exports = (mongoose) => {
             return User.findOne(params);
         }
     
-        static async create(userData) {
+        static async create(userData) {      
 
-            userData.password =  await bcrypt.hash(userData.password, 10);
+            userData._password =  await bcrypt.hash(userData._password, 10);
     
             let user = new User({
-            firstname : userData.firstname,
-            lastname : userData.lastname,
-            email : userData.email,
-            password : userData.password,
-            role : userData.role,
+            _firstname : userData._firstname,
+            _lastname : userData._lastname,
+            _email : userData._email,
+            _password : userData._password,
+            _role : userData._role,
             }); 
 
             return user.save();

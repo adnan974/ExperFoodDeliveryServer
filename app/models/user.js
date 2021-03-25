@@ -2,14 +2,14 @@
 module.exports = (mongoose) => {
 
     return mongoose && mongoose.model('User', mongoose.Schema({
-        lastname: String,
-        firstname: String,
-        role: String,
-        email: String,
-        password: String,
-        address: String,
-        CP: String,
-        city: String,
-        phone: String,
+        _lastname: String,
+        _firstname: String,
+        _role: String,
+        _email: String,
+        _password: String,
+        _address: String,
+        _CP: String,
+        _city: String,
+        _phone: String,
     }))
 }
