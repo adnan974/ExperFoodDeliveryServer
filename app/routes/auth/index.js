@@ -8,8 +8,8 @@ const { body, validationResult } = require('express-validator');
 
 AuthRouter.route("/login")
     .post(
-        body('email').not().isEmpty(),
-        body('password').not().isEmpty(),
+        body('_email').not().isEmpty(),
+        body('_password').not().isEmpty(),
 
         async (req, res) => {
 
@@ -18,14 +18,15 @@ AuthRouter.route("/login")
                 return res.status(400).json({ errors: errors.array() });
             }
 
-            const email = req.body.email.toLocaleLowerCase();
-            const password = req.body.password;
-            const user = await UserRepository.findOne({ email })
-            const areEquals = user ? await bcrypt.compare(password, user.password) : false;
+            const email = req.body._email.toLocaleLowerCase();   
+            const password = req.body._password;
+            const user = await UserRepository.findOne({ _email : email })
+
+            const areEquals = user ? await bcrypt.compare(password, user._password) : false;
 
             if (user && areEquals) {
-                delete user.password;
-                const token = jwt.sign({ iss: 'http://localhost:5000', role: user.role }, config.secret);
+                delete user._password;
+                const token = jwt.sign({ iss: 'http://localhost:5000', role: user._role }, config.secret);
                 res.json({ success: true, data: user, token });
 
             } else {
@@ -36,10 +37,9 @@ AuthRouter.route("/login")
 
 AuthRouter.route("/register")
     .post(
-        body('email').isEmail(),
-        body('password').isLength({ min: 8 }),
+        body('_email').isEmail(),
+        body('_password').isLength({ min: 8 }),
         (req, res) => {
-
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
                 return res.status(400).json({ errors: errors.array() });
@@ -54,6 +54,5 @@ AuthRouter.route("/register")
                     res.json({ success: false, message: err })
                 })
         })
-
 
 module.exports = AuthRouter;
