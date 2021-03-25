@@ -1,6 +1,7 @@
 const AuthRouter = require("express").Router();
 const jwt = require('jsonwebtoken');
 const config = require('../../../config');
+const {UserRepository} = require("../../repositories/");
 
 const userTest = {
     id:1, firstname : 'John', 
@@ -31,6 +32,25 @@ AuthRouter.route("/login")
         } else {
             res.json({ success: true, message: 'missing datas' })
         }     
+    })
+
+    AuthRouter.route("/register")
+    .post((req, res) => {
+        if (req.body) {
+            
+            UserRepository.create(req.body)
+            .then((response)=>{
+                res.status(201);              
+                res.json({ success: true, message: response })
+            })
+            .catch((err)=>{
+                console.error(err)
+                res.json({ success: false, message: err })
+            })
+        }else {
+            res.status(400);              
+            res.json({ success: false, message: "missing datas" })
+        }    
     })
 
 module.exports = AuthRouter;
