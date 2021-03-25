@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 
 module.exports = (mongoose) => {   
 
@@ -13,7 +14,9 @@ module.exports = (mongoose) => {
             return User.findOne(params);
         }
     
-        static create(userData) {
+        static async create(userData) {
+
+            userData.password =  await bcrypt.hash(userData.password, 10);
     
             let user = new User({
             firstname : userData.firstname,

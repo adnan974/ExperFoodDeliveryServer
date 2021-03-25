@@ -5,9 +5,9 @@ module.exports = (mongoose) => {
         name: String,
         description: String,
         price: Number,
-        restaurant: [{
+        restaurant: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Restaurant"
-        }]        
+        }        
     }))
 }
