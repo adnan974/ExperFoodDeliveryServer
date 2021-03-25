@@ -31,4 +31,30 @@ RestaurantRouter.route("/")
         } 
     })
 
+RestaurantRouter
+.route('/:id')
+.patch((req,res) => {
+    RestaurantRepository
+    .update(req.params.id,req.body)
+    .then(response => {
+         res.json({ success: true, message: response })
+    })
+    .catch((err) => {
+         console.error(err)
+         res.json({ success: false, message: err })
+    })
+})
+.delete((req,res) => {
+    console.log(req.params.id)
+    RestaurantRepository
+    .delete(req.params.id)
+    .then(response=>{
+        res.json({success:true,message:response})
+    })
+    .catch((err) => {
+        console.error(err)
+        res.json({ success: false, message: err })
+    })
+})
+
 module.exports = RestaurantRouter;

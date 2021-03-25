@@ -22,6 +22,15 @@ module.exports = (mongoose) => {
             return restaurant.save();
         }
 
+        static update(id,restaurantUpdated){
+            return Restaurant.updateOne({ _id: id},restaurantUpdated)
+            
+        }
+
+        static delete(id){
+            return Restaurant.deleteOne({_id:id})
+        }
+
     }
 
     return RestaurantRepository
