@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const config = require('../../config.json')
 
+
 mongoose.connect(config.db.urlmongo, config.db.options);
 
 let db = mongoose.connection; 
