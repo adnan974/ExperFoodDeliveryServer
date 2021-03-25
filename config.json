@@ -1,0 +1,18 @@
+{
+    "rootAPI": "/api/",
+    "port": 5000,
+    "secret" : "sz,sopfiION45OIF5DNn6nNIUJIByUyÈ_Ç_hhÈT--Èè-((U6azaa454f4eIIKNO4545dsz",
+    "db": {
+        "urlmongo": "mongodb://localhost:27017/bddname",
+        "host": "localhost",
+        "database": "exper-food-delivery",
+        "user": "root",
+        "password": "",
+        "options" : { 
+            "server": { "socketOptions": { "keepAlive": 300000, "connectTimeoutMS": 30000 } }, 
+            "replset": { "socketOptions": { "keepAlive": 300000, "connectTimeoutMS" : 30000 } } 
+        } 
+    },
+    "errors-messages": {},
+    "success-messages": {}
+}
