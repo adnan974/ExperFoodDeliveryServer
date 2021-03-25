@@ -11,6 +11,5 @@ module.exports = (mongoose) => {
         CP: String,
         city: String,
         phone: String,
-
     }))
 }
