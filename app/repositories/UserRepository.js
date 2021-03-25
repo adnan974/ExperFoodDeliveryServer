@@ -8,6 +8,10 @@ module.exports = (mongoose) => {
         static getAll() {
             return User.find();
         }
+
+        static findOne(params) {
+            return User.findOne(params);
+        }
     
         static create(userData) {
     
