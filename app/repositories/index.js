@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const config = require('../../config.json')
 
-
 mongoose.connect(config.db.urlmongo, config.db.options);
 
 let db = mongoose.connection; 
@@ -10,7 +9,7 @@ db.once('open', function (){
     console.log("Connexion à la base OK"); 
 });
 
-module.exports = {
+module.exports = {    
     //AuthRepository = require('./AuthRepository')(mongoose),
     UserRepository : require('./UserRepository')(mongoose),
     RestaurantRepository : require('./RestaurantRepository')(mongoose),
