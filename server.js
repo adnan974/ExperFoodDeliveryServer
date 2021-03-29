@@ -1,9 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-//const mongoose = require('mongoose');
-const config = require('./config')
+const config = require('./config');
+
 
 const app = express();
+const swagger = require('express-swagger-generator')(app);
 
 
 app.use(bodyParser.urlencoded({
@@ -17,11 +18,14 @@ app.use((req, res, next) => {
     next();
 });
 
-const MainRouter = require("express").Router();
-require("./app/routes")(MainRouter)
-app.use("/api", MainRouter);
+app.use("/api", require("./app/routes"));
 
 
+swagger({
+    swaggerDefinition: config.swagger.swaggerDefinition,
+    basedir: __dirname, 
+    files: ['./app/**/*.js']
+});
 
 app.listen(config.port, ()=> {
     console.log( `Listening on port ${config.port}`);

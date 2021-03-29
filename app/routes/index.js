@@ -1,6 +1,9 @@
-module.exports = (router) => {    
-    router.use("/", require("./auth"));
-    router.use("/users", require("./user"));
-    router.use("/restaurants", require("./restaurant"));
-    router.use("/menus", require("./menu"));
-}
+const MainRouter = require("express").Router();
+
+
+MainRouter.use("/", require("./auth"));
+MainRouter.use("/users", require("./user"));
+MainRouter.use("/restaurants", require("./restaurant"));
+MainRouter.use("/menus", require("./menu"));
+
+module.exports = MainRouter;

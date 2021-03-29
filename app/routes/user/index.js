@@ -4,6 +4,15 @@ const {UserRepository} = require("../../repositories/");
 
 UserRouter.route("/")
 
+/**
+ * Gives a list of users
+ * @group User - user 
+ * @route GET /users 
+ * @returns {object} 201 - An object with a list of users
+ * @returns {Error}  default - Unexpected error
+ * @produces application/json
+ * @consumes application/json
+ */
     .get((req, res) => {
         UserRepository.getAll()
         .then((response)=>{            
@@ -15,6 +24,16 @@ UserRouter.route("/")
         })
     })
 
+/**
+ * Allows to create a user
+ * @group User - user 
+ * @route POST /users
+ * @param {UserRegisterDto.model} user.body.required  
+ * @returns {object} 201 - An object with a list of users
+ * @returns {Error}  default - Unexpected error
+ * @produces application/json
+ * @consumes application/json
+ */
     .post((req, res) => {
         
         if (req.body) {
