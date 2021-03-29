@@ -1,12 +1,12 @@
 const AuthRouter = require("express").Router();
-const jwt = require('jsonwebtoken');
-const config = require('../../../config');
 const { UserRepository } = require("../../repositories/");
 const bcrypt = require('bcrypt');
 const { body, validationResult } = require('express-validator');
+const jwtModule = require('../../jwt-module')
 
 
 AuthRouter.route("/login")
+
 /**
  * Function that allows a user to authenticate
  * @group Auth - authentification
@@ -35,8 +35,8 @@ AuthRouter.route("/login")
             const areEquals = user ? await bcrypt.compare(password, user._password) : false;
 
             if (user && areEquals) {
-                delete user._password;
-                const token = jwt.sign({ iss: "http://localhost:5000", email: user._email }, config.secret, { expiresIn: '1h' });
+                delete user._password;                
+                const token = jwtModule.createJwt(user)
                 res.json({ success: true, data: user, token });
 
             } else {
@@ -46,6 +46,7 @@ AuthRouter.route("/login")
         })
 
 AuthRouter.route("/register")
+
 /**
  * Function that allows a user to register
  * @group Auth - authentification

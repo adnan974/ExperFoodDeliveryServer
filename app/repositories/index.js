@@ -1,12 +1,14 @@
 const mongoose = require('mongoose');
-const config = require('../../config.json')
+const {mongoConfig} = require('../../config');
 
-mongoose.connect(config.db.urlmongo, config.db.options);
+mongoose.connect(mongoConfig.urlmongo, mongoConfig.options);
 
 let db = mongoose.connection; 
 db.on('error', console.error.bind(console, 'Erreur lors de la connexion')); 
 db.once('open', function (){
-    console.log("Connexion à la base OK"); 
+    console.info("Connexion à la base OK");
+    console.info("*");
+    console.info("*");  
 });
 
 module.exports = {    

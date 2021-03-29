@@ -1,6 +1,8 @@
 const RestaurantRouter = require("express").Router();
 const { RestaurantRepository, MenuRepository } = require("../../repositories/");
-const {authJwtCheck} = require('../../middlewares/auth-jwt-check')
+const {authJwtCheck} = require('../../middlewares/auth-jwt-check');
+const authorize = require('../../middlewares/auth-role-check');
+const Role = require('../../models/role');
 
 
 RestaurantRouter.route("/")
@@ -36,7 +38,7 @@ RestaurantRouter.route("/")
      * @returns {object} 200 - An object with a list of restaurants
      * @returns {Error}  default - Unexpected error
      */
-    .post(authJwtCheck,(req, res) => {
+    .post(authJwtCheck, authorize(Role.Restorer),(req, res) => {
         if (req.body) {
             RestaurantRepository.create(req.body)
                 .then((response) => {
@@ -49,8 +51,7 @@ RestaurantRouter.route("/")
         }
     })
 
-RestaurantRouter
-    .route('/:id')
+RestaurantRouter.route('/:id')
 
     /**
      * Gives the requested restaurant
@@ -84,7 +85,7 @@ RestaurantRouter
      * @returns {object} 200 - An object with user a the updated restaurants
      * @returns {Error}  default - Unexpected error
      */
-    .patch((req, res) => {
+    .patch(authJwtCheck, authorize(Role.Restorer),(req, res) => {
         RestaurantRepository
             .update(req.params.id, req.body)
             .then(response => {
@@ -106,7 +107,7 @@ RestaurantRouter
      * @returns {object} 200 - An object with informations aout the deleted restaurant
      * @returns {Error}  default - Unexpected error
      */
-    .delete((req, res) => {        
+    .delete(authJwtCheck, authorize(Role.Restorer),(req, res) => {        
         RestaurantRepository
             .delete(req.params.id)
             .then(response => {
@@ -119,11 +120,10 @@ RestaurantRouter
     })
 
 
-RestaurantRouter
-    .route('/:id/menus')
+RestaurantRouter.route('/:id/menus')
 
     /**
-     * Gives a list of restaurant's menus 
+     * Allows to create a new restaurant's menu 
      * @group Restaurant - restaurants
      * @route GET /restaurants/{id}/menus
      * @param {string} id.path.required - restaurant id
@@ -146,8 +146,7 @@ RestaurantRouter
 
     })
 
-RestaurantRouter
-    .route('/:restaurantId/menus/:menuId')
+RestaurantRouter.route('/:restaurantId/menus/:menuId')
     .get((req, res) => {
         MenuRepository.getOne(req.params.menuId)
             .then(response => {
@@ -157,7 +156,7 @@ RestaurantRouter
                 res.status(500).send({ success: false, message: error });
             });
     })
-    .post((req, res) => {
+    .post(authJwtCheck, authorize,(req, res) => {
 
         MenuRepository.getOne(req.params.menuId)
             .then(response => {
@@ -171,7 +170,7 @@ RestaurantRouter
             })
 
     })
-    .patch((req, res) => {
+    .patch(authJwtCheck, authorize,(req, res) => {
 
         MenuRepository.update(req.params.menuId, req.body)
             .then(response => {
@@ -181,10 +180,10 @@ RestaurantRouter
                 res.status(500).send({ success: false, message: error });
             });
     })
-    .delete((req, res) => {
+    .delete(authJwtCheck, authorize,(req, res) => {
         MenuRepository.delete(req.params.menuId)
             .then(response => {
-                res.json({ succes: true, message: response });
+                res.json({ succes: true, message: "Menu deleted", data:response });
             })
             .catch(error => {
                 res.status(500).send({ success: false, message: error });

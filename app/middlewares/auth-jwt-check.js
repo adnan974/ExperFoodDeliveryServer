@@ -1,21 +1,23 @@
-const jwt = require('jsonwebtoken');
-const config = require('../../config')
+const jwtModule = require('../jwt-module')
 
-exports.authJwtCheck = (req, res, next) => {    
+exports.authJwtCheck = (req, res, next) => {  
+    
     if (!req.header('Authorization')) {        
         return res.status(401).json({ success: false, message: 'no authorization header' });
     } else {      
         
         const authorizationsParts = req.header('Authorization').split(' ');
         let token = authorizationsParts[1];
+        let decoded = null;
 
         try {
-            var decoded = jwt.verify(token, config.secret);
+            decoded = jwtModule.verifyJwt(token);
           } catch(err) {
             return res.status(401).json({ success: false, message: 'invalid token' });
           }
-
-        req.token = token;
+          
+        req.user = {email : decoded.email, role: decoded.role, token: token}; 
+        
         next();
     }
 }
