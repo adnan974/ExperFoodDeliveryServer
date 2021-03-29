@@ -18,10 +18,10 @@ module.exports = (mongoose) => {
         static create(restaurantData) {
 
             let restaurant = new Restaurant({
-                _name: restaurantData.name,
-                _address: restaurantData.address,
-                _description: restaurantData.description,
-                _mainPhotoUrl: restaurantData.mainPhotoUrl,
+                _name: restaurantData._name,
+                _address: restaurantData._address,
+                _description: restaurantData._description,
+                _mainPhotoUrl: restaurantData._mainPhotoUrl,
             });
 
             return restaurant.save();

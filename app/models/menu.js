@@ -1,3 +1,10 @@
+/**
+ * @typedef Menu
+ * @property {string} _id
+ * @property {string} _name
+ * @property {string} _description
+ * @property {number} _price
+ */
 
 module.exports = (mongoose) => {
 

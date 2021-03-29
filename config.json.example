@@ -1,0 +1,46 @@
+{
+    "rootAPI": "/api/",
+    "port": 5000,
+    "secret" : "you_secret",
+    "db": {
+        "urlmongo": "mongodb://localhost:27017/your_database",
+        "host": "localhost",
+        "database": "database_name",
+        "user": "user",
+        "password": "password",
+        "options" : { 
+            "server": { "socketOptions": { "keepAlive": 300000, "connectTimeoutMS": 30000 } }, 
+            "replset": { "socketOptions": { "keepAlive": 300000, "connectTimeoutMS" : 30000 } },
+            "useNewUrlParser":true,
+            "useUnifiedTopology" :true 
+        } 
+    },
+    "swagger":  {
+        "swaggerDefinition": {
+            "info": {
+                "description": "NodeJS Server for Exper-Food-Delivery app",
+                "title": "API Exper-Food-Delivery",
+                "version": "1.0.0"
+            },
+            "host": "localhost:5000",
+            "basePath": "/api",
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "schemes": ["http", "https", "bearer"],
+            "securityDefinitions": {
+                "JWT": {
+                    "type": "apiKey",
+                    "in": "header",
+                    "name": "Authorization",
+                    "scheme" : "bearer",
+                    "description": ""
+                }
+   
+            }
+        }
+    },
+    "errors-messages": {},
+    "success-messages": {}
+}

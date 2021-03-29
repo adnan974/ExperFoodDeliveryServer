@@ -28,10 +28,7 @@ module.exports = (mongoose) => {
             let menu = await Menu.findById(id);
             menuUpdated.name ? menu._name = menuUpdated.name : menu._name = menu._name;
             menuUpdated.description ? menu._description = menuUpdated.description : menu._description = menu._description;
-            menuUpdated.price ? menu._price = menuUpdated.price : menu._price = menu._price;
-            console.log('----')
-
-            console.log(menu)
+            menuUpdated.price ? menu._price = menuUpdated.price : menu._price = menu._price;    
         
             return Menu.updateOne({ _id: id }, menu)
         }

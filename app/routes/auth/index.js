@@ -7,6 +7,16 @@ const { body, validationResult } = require('express-validator');
 
 
 AuthRouter.route("/login")
+/**
+ * Function that allows a user to authenticate
+ * @group Auth - authentification
+ * @route POST /login
+ * @param {UserLoginDto.model} user.body.required 
+ * @produces application/json
+ * @consumes application/json
+ * @returns {object} 200 - An object with user info and JWT
+ * @returns {Error}  default - Unexpected error
+ */
     .post(
         body('_email').not().isEmpty(),
         body('_password').not().isEmpty(),
@@ -26,7 +36,7 @@ AuthRouter.route("/login")
 
             if (user && areEquals) {
                 delete user._password;
-                const token = jwt.sign({ iss: 'http://localhost:5000', role: user._role }, config.secret);
+                const token = jwt.sign({ iss: "http://localhost:5000", email: user._email }, config.secret, { expiresIn: '1h' });
                 res.json({ success: true, data: user, token });
 
             } else {
@@ -36,6 +46,16 @@ AuthRouter.route("/login")
         })
 
 AuthRouter.route("/register")
+/**
+ * Function that allows a user to register
+ * @group Auth - authentification
+ * @param {UserRegisterDto.model} user.body.required 
+ * @route POST /register 
+ * @returns {object} 201 - An object with created user info
+ * @returns {Error}  default - Unexpected error
+ * @produces application/json
+ * @consumes application/json
+ */
     .post(
         body('_email').isEmail(),
         body('_password').isLength({ min: 8 }),
@@ -46,8 +66,7 @@ AuthRouter.route("/register")
             }
             UserRepository.create(req.body)
                 .then((response) => {
-                    res.status(201);
-                    res.json({ success: true, message: response })
+                    res.status(201).json({ success: true, message: "User created", data: response })
                 })
                 .catch((err) => {
                     console.error(err)
