@@ -14,5 +14,5 @@ exports.createJwt = (user) => {
 }
 
 exports.verifyJwt = (token) => {
-    return jwt.verify(token, secret);
+    return jwt.verify(token, jwtConfig.secret);
 }
