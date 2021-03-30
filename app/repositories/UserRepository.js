@@ -10,8 +10,12 @@ module.exports = (mongoose) => {
             return User.find();
         }
 
-        static findOne(id) {
+        static findById(id) {
             return User.findById(id);
+        }
+
+        static findOne(params) {
+            return User.findOne(params);
         }
     
         static async create(userData) {      
