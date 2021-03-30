@@ -25,7 +25,6 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.2",
     "express-swagger-generator": "^1.1.17"
-    
   },
   "devDependencies": {}
 }
