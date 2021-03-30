@@ -1,48 +1,52 @@
 /**
  * @typedef User
  * @property {string} _id
- * @property {string} _lastname
- * @property {string} _firstname
- * @property {string} _role
- * @property {string} _email
- * @property {string} _password 
- * @property {string} _address 
- * @property {string} _CP 
- * @property {string} _city 
- * @property {string} _phone 
+ * @property {string} lastname
+ * @property {string} firstname
+ * @property {string} role
+ * @property {string} email
+ * @property {string} password 
+ * @property {string} address 
+ * @property {string} CP 
+ * @property {string} city 
+ * @property {string} phone 
  */
 
 /**
  * @typedef UserRegisterDto
- * @property {string} _lastname
- * @property {string} _firstname
- * @property {string} _role
- * @property {string} _email
- * @property {string} _password 
- * @property {string} _address 
- * @property {string} _CP 
- * @property {string} _city 
- * @property {string} _phone 
+ * @property {string} lastname
+ * @property {string} firstname
+ * @property {string} role
+ * @property {string} email
+ * @property {string} password 
+ * @property {string} address 
+ * @property {string} CP 
+ * @property {string} city 
+ * @property {string} phone 
  */
 
 /**
  * @typedef UserLoginDto
- * @property {string} _email
- * @property {string} _password 
+ * @property {string} email
+ * @property {string} password 
  */
 
 module.exports = (mongoose) => {
 
     return mongoose && mongoose.model('User', mongoose.Schema({
-        _lastname: String,
-        _firstname: String,
-        _role: String,
-        _email: String,
-        _password: String,
-        _address: String,
-        _CP: String,
-        _city: String,
-        _phone: String,
+        lastname: { type : String , required : true },
+        firstname: { type : String , required : true },
+        role: { type : String , required : true},
+        email: { type : String , unique : true, required : true, dropDups: true },
+        password: { type : String , unique : true, required : true },
+        address: { type : String , required : false },
+        CP: { type : String,  required : false },
+        city: String,
+        phone: String,
+        restaurants: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Restaurant",            
+        }],
     }))
 }
 

@@ -14,8 +14,7 @@ MenuRouter
  * @consumes application/json
  */
 .get((req,res)=>{
-    MenuRepository
-    .getAll()
+    MenuRepository.getAllByRestaurant()
     .then(response=>{
         return res.json(response);
     })

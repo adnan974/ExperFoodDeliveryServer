@@ -7,16 +7,19 @@
         "expiresIn" : "1h"
     },    
     "mongoConfig": {
-        "urlmongo": "mongodb://localhost:27017/your_database",
+        "urlmongo": "mongodb://localhost:27017/database_name",
         "host": "localhost",
         "database": "database_name",
         "user": "",
         "password": "",
-        "options" : { 
-            "server": { "socketOptions": { "keepAlive": 300000, "connectTimeoutMS": 30000 } }, 
-            "replset": { "socketOptions": { "keepAlive": 300000, "connectTimeoutMS" : 30000 } },
+        "options" : {
+            "socketTimeoutMS" : 3000,
+            "connectTimeoutMS" : 3000,
+            "keepAlive": 3000,            
             "useNewUrlParser":true,
-            "useUnifiedTopology" :true 
+            "useUnifiedTopology" :true,
+            "useCreateIndex" : true,
+            "useFindAndModify" : true 
         } 
     },
     "swagger":  {

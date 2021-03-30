@@ -6,8 +6,9 @@ exports.createJwt = (user) => {
     return jwt.sign(
         {
             iss: jwtConfig.iss,
-            email: user._email,
-            role: user._role
+            id: user._id,
+            email: user.email,
+            role: user.role
         },
         jwtConfig.secret,
         { expiresIn: jwtConfig.expiresIn });

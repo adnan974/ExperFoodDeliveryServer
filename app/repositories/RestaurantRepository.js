@@ -1,6 +1,6 @@
-const { MenuRepository } = require(".");
 
-module.exports = (mongoose) => {
+
+module.exports = (mongoose, UserRepository) => {
 
     const Restaurant = require("../models/restaurant")(mongoose)
 
@@ -15,26 +15,32 @@ module.exports = (mongoose) => {
             return Restaurant.findById(id);
         }
 
-        static create(restaurantData) {
+        static create(restaurantData, userId) {
+  
+            let response;
 
-            let restaurant = new Restaurant({
-                _name: restaurantData._name,
-                _address: restaurantData._address,
-                _description: restaurantData._description,
-                _mainPhotoUrl: restaurantData._mainPhotoUrl,
-            });
-
-            return restaurant.save();
+           return Restaurant.create({
+                name: restaurantData.name,
+                address: restaurantData.address,
+                description: restaurantData.description,
+                mainPhotoUrl: restaurantData.mainPhotoUrl,
+                owner : userId
+            }).then((createdRestaurant)=>{
+                response = createdRestaurant;                
+                return UserRepository.addRestaurantToUser(userId, createdRestaurant);
+            }).then((user)=>{                
+                return response;
+            })
         }
 
         //Todo à modifier
         static async update(id,restaurantUpdated){
 
             let restaurant = await Restaurant.findById(id);
-            restaurantUpdated.name ? restaurant._name = restaurantUpdated.name : restaurant._name = restaurant._name;
-            restaurantUpdated.description ? restaurant._description = restaurantUpdated.description : restaurant._description = restaurant._description;
-            restaurantUpdated.address ? restaurant._address = restaurantUpdated.address : restaurant._address = restaurant._address;
-            restaurantUpdated.mainPhotoUrl ? restaurant._mainPhotoUrl = restaurantUpdated.mainPhotoUrl : restaurant._mainPhotoUrl = restaurant._mainPhotoUrl;
+            restaurantUpdated.name ? restaurant.name = restaurantUpdated.name : restaurant.name = restaurant.name;
+            restaurantUpdated.description ? restaurant.description = restaurantUpdated.description : restaurant.description = restaurant.description;
+            restaurantUpdated.address ? restaurant.address = restaurantUpdated.address : restaurant.address = restaurant.address;
+            restaurantUpdated.mainPhotoUrl ? restaurant.mainPhotoUrl = restaurantUpdated.mainPhotoUrl : restaurant.mainPhotoUrl = restaurant.mainPhotoUrl;
             return Restaurant.updateOne({ _id: id }, restaurant)
             
         }

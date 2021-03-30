@@ -16,8 +16,9 @@ exports.authJwtCheck = (req, res, next) => {
             return res.status(401).json({ success: false, message: 'invalid token' });
           }
           
-        req.user = {email : decoded.email, role: decoded.role, token: token}; 
+        req.user = {id : decoded.id, email: decoded.email, role: decoded.role, token: token}; 
         
         next();
     }
+    
 }
