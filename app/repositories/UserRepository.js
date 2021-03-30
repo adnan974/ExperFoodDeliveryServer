@@ -33,6 +33,11 @@ module.exports = (mongoose) => {
             return user.save();
         }
 
+        static async addRestaurantToUser(userId, restaurant) {
+
+            return User.findOneAndUpdate({_id: userId},  {$push: {restaurants: restaurant._id}}, { new: true })
+        }
+
         static async update(id, userUpdated) {
 
             let user = await User.findById(id);
