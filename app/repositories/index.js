@@ -6,14 +6,16 @@ mongoose.connect(mongoConfig.urlmongo, mongoConfig.options);
 let db = mongoose.connection; 
 db.on('error', console.error.bind(console, 'Erreur lors de la connexion')); 
 db.once('open', function (){
-    console.info("Connexion à la base OK");
-    console.info("*");
-    console.info("*");  
+    console.info("MongoDB connection OK"); 
 });
 
-module.exports = {    
-    //AuthRepository = require('./AuthRepository')(mongoose),
-    UserRepository : require('./UserRepository')(mongoose),
-    RestaurantRepository : require('./RestaurantRepository')(mongoose),
-    MenuRepository : require('./MenuRepository')(mongoose)
+
+const UserRepository = require('./UserRepository')(mongoose);
+const RestaurantRepository = require('./RestaurantRepository')(mongoose, UserRepository);
+const MenuRepository =  require('./MenuRepository')(mongoose, RestaurantRepository)
+
+module.exports = {
+    UserRepository : UserRepository,   
+    RestaurantRepository : RestaurantRepository,
+    MenuRepository : MenuRepository
 }

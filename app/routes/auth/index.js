@@ -18,29 +18,29 @@ AuthRouter.route("/login")
  * @returns {Error}  default - Unexpected error
  */
     .post(
-        body('_email').not().isEmpty(),
-        body('_password').not().isEmpty(),
+        body('email').not().isEmpty(),
+        body('password').not().isEmpty(),
 
-        async (req, res) => {
+        async (req, res) => {         
 
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
                 return res.status(400).json({ errors: errors.array() });
             }
 
-            const email = req.body._email.toLocaleLowerCase();   
-            const password = req.body._password;
-            const user = await UserRepository.findOne({ _email : email })
+            const email = req.body.email?.toLocaleLowerCase();   
+            const password = req.body.password;
+            const user = await UserRepository.findOne({ email : email })
 
-            const areEquals = user ? await bcrypt.compare(password, user._password) : false;
+            const areEquals = user ? await bcrypt.compare(password, user.password) : false;
 
             if (user && areEquals) {
-                delete user._password;                
+                delete user.password;                
                 const token = jwtModule.createJwt(user)
-                res.json({ success: true, data: user, token });
+                res.json({ success: true, message:"Login ok", data: {user, token} });
 
             } else {
-                res.json({ success: false, message: "invalid credentials" });
+                res.json({ success: false, message: "Invalid credentials" });
             }
 
         })
@@ -58,9 +58,10 @@ AuthRouter.route("/register")
  * @consumes application/json
  */
     .post(
-        body('_email').isEmail(),
-        body('_password').isLength({ min: 8 }),
-        (req, res) => {
+        body('email').isEmail(),
+        body('password').isLength({ min: 8 }),
+        (req, res) => {           
+
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
                 return res.status(400).json({ errors: errors.array() });

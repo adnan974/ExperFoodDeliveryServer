@@ -2,12 +2,16 @@
 module.exports = (mongoose) => {
 
     const Menu = require("../models/menu")(mongoose)
+    const RestaurantRepository = require("./RestaurantRepository");
 
     let MenuRepository = class {
 
         static getAll() {
-
             return Menu.find();
+        }
+
+        static async getAllByRestaurant(restaurantId) {
+            return RestaurantRepository.getOne(restaurantId).populate('menus');;
         }
 
         static getOne(id){
@@ -16,9 +20,9 @@ module.exports = (mongoose) => {
 
         static create(MenuData) {
             let menu = new Menu({
-                _name: MenuData.name,
-                _address: MenuData.address,
-                _description: MenuData.description,
+                name: MenuData.name,
+                address: MenuData.address,
+                description: MenuData.description,
             });
 
             return menu.save();
@@ -26,9 +30,9 @@ module.exports = (mongoose) => {
 
         static async update(id, menuUpdated) {
             let menu = await Menu.findById(id);
-            menuUpdated.name ? menu._name = menuUpdated.name : menu._name = menu._name;
-            menuUpdated.description ? menu._description = menuUpdated.description : menu._description = menu._description;
-            menuUpdated.price ? menu._price = menuUpdated.price : menu._price = menu._price;    
+            menuUpdated.name ? menu.name = menuUpdated.name : menu.name = menu.name;
+            menuUpdated.description ? menu.description = menuUpdated.description : menu.description = menu.description;
+            menuUpdated.price ? menu.price = menuUpdated.price : menu.price = menu.price;    
         
             return Menu.updateOne({ _id: id }, menu)
         }

@@ -1,5 +1,5 @@
 const RestaurantRouter = require("express").Router();
-const { RestaurantRepository, MenuRepository } = require("../../repositories/");
+const { RestaurantRepository } = require("../../repositories/");
 const {authJwtCheck} = require('../../middlewares/auth-jwt-check');
 const authorize = require('../../middlewares/auth-role-check');
 const Role = require('../../models/role');
@@ -40,9 +40,9 @@ RestaurantRouter.route("/")
      */
     .post(authJwtCheck, authorize(Role.Restorer),(req, res) => {
         if (req.body) {
-            RestaurantRepository.create(req.body)
+            RestaurantRepository.create(req.body, req.user.id)
                 .then((response) => {
-                    res.status(201).json({ success: true, message: response })
+                    res.status(201).json({ success: true, data : response, message: 'Restaurant created' })
                 })
                 .catch((err) => {
                     console.error(err)
@@ -118,76 +118,6 @@ RestaurantRouter.route('/:id')
                 res.json({ success: false, message: err })
             })
     })
-
-
-RestaurantRouter.route('/:id/menus')
-
-    /**
-     * Allows to create a new restaurant's menu 
-     * @group Restaurant - restaurants
-     * @route GET /restaurants/{id}/menus
-     * @param {string} id.path.required - restaurant id
-     * @produces application/json
-     * @consumes application/json
-     * @returns {object} 200 - An object with a list of restaurant's menus
-     * @returns {Error}  default - Unexpected error
-     */
-    .post((req, res) => {
-        MenuRepository.create(req.body)
-            .then(response => {
-                RestaurantRepository.addMenuToRestaurant(req.params.id, response);
-            })
-            .then(response => {
-                res.status(201).json({ succes: true, message: response });
-            })
-            .catch(error => {
-                res.status(500).send({ success: false, message: error });
-            })
-
-    })
-
-RestaurantRouter.route('/:restaurantId/menus/:menuId')
-    .get((req, res) => {
-        MenuRepository.getOne(req.params.menuId)
-            .then(response => {
-                res.json({ succes: true, message: response });
-            })
-            .catch(error => {
-                res.status(500).send({ success: false, message: error });
-            });
-    })
-    .post(authJwtCheck, authorize,(req, res) => {
-
-        MenuRepository.getOne(req.params.menuId)
-            .then(response => {
-                RestaurantRepository.addMenuToRestaurant(req.params.restaurantId, response)
-            })
-            .then(response => {
-                res.status(201).json({ succes: true, message: response });
-            })
-            .catch(error => {
-                res.status(500).send({ success: false, message: error });
-            })
-
-    })
-    .patch(authJwtCheck, authorize,(req, res) => {
-
-        MenuRepository.update(req.params.menuId, req.body)
-            .then(response => {
-                res.json({ succes: true, message: response });
-            })
-            .catch(error => {
-                res.status(500).send({ success: false, message: error });
-            });
-    })
-    .delete(authJwtCheck, authorize,(req, res) => {
-        MenuRepository.delete(req.params.menuId)
-            .then(response => {
-                res.json({ succes: true, message: "Menu deleted", data:response });
-            })
-            .catch(error => {
-                res.status(500).send({ success: false, message: error });
-            });
-    })
-
+    
+RestaurantRouter.use("/:restaurantId/menus", require("./menu"));
 module.exports = RestaurantRouter;
