@@ -33,9 +33,9 @@ module.exports = (mongoose) => {
             return user.save();
         }
 
-        static async addRestaurantToUser(userId, restaurant) {
+        static async addRestaurantToUser(userId, restaurantId) {
 
-            return User.findOneAndUpdate({_id: userId},  {$push: {restaurants: restaurant._id}}, { new: true })
+            return User.findOneAndUpdate({_id: userId},  {$push: {restaurants: restaurantId}}, { new: true })
         }
 
         static async update(id, userUpdated) {
