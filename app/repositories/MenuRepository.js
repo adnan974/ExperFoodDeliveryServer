@@ -17,22 +17,7 @@ module.exports = (mongoose, RestaurantRepository) => {
             return Menu.findById(id);
         }
 
-        // static create(MenuData) {
-        //     console.log()
-        //     let menu = new Menu({
-        //         name: MenuData.name,
-        //         address: MenuData.address,
-        //         description: MenuData.description,
-        //     });
-
-        //     return menu.save();
-        // }
-
         static create(menuData, restaurantId) {
-
-            console.log('on arrive ici, dans le reate du menurepository', menuData),
-
-            console.log('le restaurant id vaut :', restaurantId)
 
             let response;
 
@@ -42,7 +27,6 @@ module.exports = (mongoose, RestaurantRepository) => {
                 price: menuData.price,
                 restaurant: restaurantId
             }).then((createdMenu) => {
-                console.log('on est la c pas mal', createdMenu)
                 response = createdMenu;
                 return RestaurantRepository.addMenuToRestaurant(restaurantId, createdMenu._id);
             }).then(() => {

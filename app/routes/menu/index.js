@@ -13,7 +13,6 @@ MenuRouter.route('/')
  * @consumes application/json
  */
 .get((req,res)=>{
-    console.log('on arrive bien a menu route')
     MenuRepository.getAll()
     .then(response=>{
         res.json({ success: true, data: response })

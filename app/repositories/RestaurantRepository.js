@@ -50,8 +50,6 @@ module.exports = (mongoose, UserRepository) => {
 
         static async addMenuToRestaurant(restaurantId, menuId) {
 
-            console.log('on arrive dans le ADD MENU TO RESTAUANT !!!!', restaurantId, menuId)
-
             return Restaurant.findOneAndUpdate({ _id: restaurantId }, { $push: { menus: menuId } }, { new: true })
         }
 
