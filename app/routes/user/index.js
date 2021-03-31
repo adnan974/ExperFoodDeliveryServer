@@ -64,7 +64,7 @@ UserRouter.route("/:id")
      * @consumes application/json
      */
     .get((req, res) => {
-        UserRepository.findOne(req.params.id)
+        UserRepository.findById(req.params.id)
             .then((response) => {
                 res.json({ success: true, data: response })
             })
