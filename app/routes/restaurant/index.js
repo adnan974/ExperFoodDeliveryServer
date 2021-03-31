@@ -1,7 +1,8 @@
 const RestaurantRouter = require("express").Router();
 const { RestaurantRepository } = require("../../repositories/");
-const {authJwtCheck} = require('../../middlewares/auth-jwt-check');
+const { authJwtCheck } = require('../../middlewares/auth-jwt-check');
 const authorize = require('../../middlewares/auth-role-check');
+const { body, validationResult } = require('express-validator');
 const Role = require('../../models/role');
 
 
@@ -17,7 +18,6 @@ RestaurantRouter.route("/")
      * @returns {Error}  default - Unexpected error
      */
     .get((req, res) => {
-
         RestaurantRepository.getAll()
             .then((response) => {
                 res.json({ success: true, data: response })
@@ -38,18 +38,28 @@ RestaurantRouter.route("/")
      * @returns {object} 200 - An object with a list of restaurants
      * @returns {Error}  default - Unexpected error
      */
-    .post(authJwtCheck, authorize(Role.Restorer),(req, res) => {
-        if (req.body) {
-            RestaurantRepository.create(req.body, req.user.id)
-                .then((response) => {
-                    res.status(201).json({ success: true, data : response, message: 'Restaurant created' })
-                })
-                .catch((err) => {
-                    console.error(err)
-                    res.json({ success: false, message: err })
-                })
-        }
-    })
+    .post(
+        authJwtCheck,
+        authorize([Role.Restorer, Role.Admin]),
+        body('name').not().isEmpty(),
+        body('description').not().isEmpty(),
+        body('address').not().isEmpty(),
+        (req, res) => {
+            if (req.body) {
+                const errors = validationResult(req);
+                if (!errors.isEmpty()) {
+                    return res.status(400).json({ errors: errors.array() });
+                };
+                RestaurantRepository.create(req.body, req.user.id)
+                    .then((response) => {
+                        res.status(201).json({ success: true, data: response, message: 'Restaurant created' })
+                    })
+                    .catch((err) => {
+                        console.error(err)
+                        res.json({ success: false, message: err })
+                    })
+            }
+        })
 
 RestaurantRouter.route('/:id')
 
@@ -85,7 +95,7 @@ RestaurantRouter.route('/:id')
      * @returns {object} 200 - An object with user a the updated restaurants
      * @returns {Error}  default - Unexpected error
      */
-    .patch(authJwtCheck, authorize(Role.Restorer),(req, res) => {
+    .patch(authJwtCheck, authorize([Role.Restorer, Role.Admin]), (req, res) => {
         RestaurantRepository
             .update(req.params.id, req.body)
             .then(response => {
@@ -104,10 +114,10 @@ RestaurantRouter.route('/:id')
      * @param {string} id.path.required - restaurant id   
      * @produces application/json
      * @consumes application/json
-     * @returns {object} 200 - An object with informations aout the deleted restaurant
+     * @returns {object} 200 - An object with informations about the deleted restaurant
      * @returns {Error}  default - Unexpected error
      */
-    .delete(authJwtCheck, authorize(Role.Restorer),(req, res) => {        
+    .delete(authJwtCheck, authorize([Role.Restorer, Role.Admin]), (req, res) => {
         RestaurantRepository
             .delete(req.params.id)
             .then(response => {
@@ -118,6 +128,6 @@ RestaurantRouter.route('/:id')
                 res.json({ success: false, message: err })
             })
     })
-    
+
 RestaurantRouter.use("/:restaurantId/menus", require("./menu"));
 module.exports = RestaurantRouter;

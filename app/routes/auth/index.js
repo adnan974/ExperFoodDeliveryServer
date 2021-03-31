@@ -8,7 +8,7 @@ const jwtModule = require('../../jwt-module')
 AuthRouter.route("/login")
 
 /**
- * Function that allows a user to authenticate
+ * Allows a user to authenticate with credentials
  * @group Auth - authentification
  * @route POST /login
  * @param {UserLoginDto.model} user.body.required 
@@ -21,8 +21,8 @@ AuthRouter.route("/login")
         body('email').not().isEmpty(),
         body('password').not().isEmpty(),
 
-        async (req, res) => {         
-
+        async (req, res) => {
+            
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
                 return res.status(400).json({ errors: errors.array() });
@@ -48,7 +48,7 @@ AuthRouter.route("/login")
 AuthRouter.route("/register")
 
 /**
- * Function that allows a user to register
+ * Allows a user to register
  * @group Auth - authentification
  * @param {UserRegisterDto.model} user.body.required 
  * @route POST /register 
@@ -58,8 +58,15 @@ AuthRouter.route("/register")
  * @consumes application/json
  */
     .post(
+        body('lastname').not().isEmpty(),
+        body('firstname').not().isEmpty(),
+        body('role').not().isEmpty(),
         body('email').isEmail(),
         body('password').isLength({ min: 8 }),
+        body('address').not().isEmpty(),
+        body('CP').not().isEmpty(),
+        body('city').not().isEmpty(),
+        body('phone').not().isEmpty(),
         (req, res) => {           
 
             const errors = validationResult(req);
