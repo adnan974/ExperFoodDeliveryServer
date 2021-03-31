@@ -19,7 +19,6 @@ MenuRouter.route('/')
      * @consumes application/json
      */
     .get((req, res) => {
-        console.log('on arrive bien a menu route restautants/menus')
         MenuRepository.getAllByRestaurant()
             .then(response => {
                 return res.json(response);
