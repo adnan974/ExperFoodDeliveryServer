@@ -10,7 +10,7 @@ MenuRouter.route('/')
 
     /**
      * Gives a list of restaurant's menus
-     * @group Restaurant - restaurant 
+     * @group Restaurant / Menu - restaurant / menus  
      * @route GET /restaurants/{restaurantId}/menus
      * @param {string} restaurantId.path.required - restaurant id 
      * @returns {object} 200 - An object with a list of menus
@@ -31,7 +31,7 @@ MenuRouter.route('/')
 
     /**
      * Allows to create a new restaurant's menu 
-     * @group Restaurant - restaurants
+     * @group Restaurant / Menu - restaurant / menus 
      * @route POST /restaurants/{restaurantId}/menus
      * @param {string} restaurantId.path.required - restaurant id
      * @param {MenuCreateDto.model} menu.body.required 
@@ -67,7 +67,7 @@ MenuRouter.route('/:menuId')
 
     /**
      * Return the requested restaurant's menu
-     * @group Restaurant - restaurant 
+     * @group Restaurant / Menu - restaurant / menus  
      * @route GET /restaurants/{restaurantId}/menus/{menuId}
      * @param {string} restaurantId.path.required - restaurant id 
      * @param {string} menuId.path.required - menu id 
@@ -88,7 +88,7 @@ MenuRouter.route('/:menuId')
 
     /**
      * Alows to update a restaurant's menu
-     * @group Restaurant - restaurant 
+     * @group Restaurant / Menu - restaurant / menus 
      * @route PATCH /restaurants/{restaurantId}/menus/{menuId}
      * @param {string} restaurantId.path.required - restaurant id 
      * @param {string} menuId.path.required - menu id 
@@ -113,7 +113,7 @@ MenuRouter.route('/:menuId')
 
     /**
      * Alows to delete a restaurant's menu
-     * @group Restaurant - restaurant 
+     * @group Restaurant / Menu - restaurant / menus 
      * @route DELETE /restaurants/{restaurantId}/menus/{menuId}
      * @param {string} restaurantId.path.required - restaurant id 
      * @param {string} menuId.path.required - menu id

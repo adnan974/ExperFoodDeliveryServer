@@ -28,6 +28,9 @@ module.exports = (mongoose) => {
             email : userData.email,
             password : userData.password,
             role : userData.role,
+            address : userData.address,
+            CP : userData.CP,
+            phone : userData.phone
             }); 
 
             return user.save();
@@ -41,15 +44,15 @@ module.exports = (mongoose) => {
         static async update(id, userUpdated) {
 
             let user = await User.findById(id);
-            userUpdated.lastname ? user._lastname = userUpdated.lastname : user._lastname = user._lastname;
-            userUpdated.firstname ? user._firstname = userUpdated.firstname : user._firstname = user._firstname;
-            userUpdated.address ? user._address = userUpdated.address : user._address = user._address;
-            userUpdated.role ? user._role = userUpdated.role : user._role = user._role;
-            userUpdated.email ? user._email = userUpdated.email : user._email = user._email;
-            userUpdated.password ? user._password = userUpdated.password : user._password = user._password;
-            userUpdated.CP ? user._CP = userUpdated.CP : user._CP = user._CP;
-            userUpdated.city ? user._city = userUpdated.city : user._city = user._city;
-            userUpdated.phone ? user._phone = userUpdated.phone : user._phone = user._phone;
+            userUpdated.lastname ? user.lastname = userUpdated.lastname : user.lastname = user.lastname;
+            userUpdated.firstname ? user.firstname = userUpdated.firstname : user.firstname = user.firstname;
+            userUpdated.address ? user.address = userUpdated.address : user.address = user.address;
+            userUpdated.role ? user.role = userUpdated.role : user.role = user.role;
+            userUpdated.email ? user.email = userUpdated.email : user.email = user.email;
+            userUpdated.password ? user.password = userUpdated.password : user.password = user.password;
+            userUpdated.CP ? user.CP = userUpdated.CP : user.CP = user.CP;
+            userUpdated.city ? user.city = userUpdated.city : user.city = user.city;
+            userUpdated.phone ? user.phone = userUpdated.phone : user.phone = user.phone;
             return User.updateOne({ _id: id }, user)
         }
     
