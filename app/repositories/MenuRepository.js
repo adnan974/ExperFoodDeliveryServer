@@ -9,8 +9,8 @@ module.exports = (mongoose, RestaurantRepository) => {
             return Menu.find();
         }
 
-        static async getAllByRestaurant(restaurantId) {
-            return RestaurantRepository.getOne(restaurantId).populate('menus');;
+        static async getAllRestaurantMenu(restaurantId){
+            return RestaurantRepository.getOne(restaurantId).populate('menus');
         }
 
         static getOne(id) {

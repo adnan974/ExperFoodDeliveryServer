@@ -19,7 +19,7 @@ MenuRouter.route('/')
      * @consumes application/json
      */
     .get((req, res) => {
-        MenuRepository.getAllByRestaurant()
+        MenuRepository.getAllRestaurantMenu(req.params.restaurantId)
             .then(response => {
                 return res.json(response);
             })
