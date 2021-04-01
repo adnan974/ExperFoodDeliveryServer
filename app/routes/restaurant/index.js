@@ -18,11 +18,11 @@ RestaurantRouter.route("/")
      * @returns {Error}  default - Unexpected error
      */
     .get((req, res) => {
-        RestaurantRepository.getAll()
-            .then((response) => {
+        RestaurantRepository.getAll(req.query.owner)
+            .then((response) => {               
                 res.json({ success: true, data: response })
             })
-            .catch((err) => {
+            .catch((err) => {           
                 console.error(err)
                 res.json({ success: false, message: err })
             })

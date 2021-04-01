@@ -4,9 +4,8 @@ exports.authJwtCheck = (req, res, next) => {
     
     if (!req.header('Authorization')) {        
         return res.status(401).json({ success: false, message: 'no authorization header' });
-    } else {      
-        
-        const authorizationsParts = req.header('Authorization').split(' ');
+    } else { 
+        const authorizationsParts = req.header('Authorization').split(' ');     
         let token = authorizationsParts[1];
         let decoded = null;
 

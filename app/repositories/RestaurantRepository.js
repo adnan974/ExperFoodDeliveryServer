@@ -6,8 +6,13 @@ module.exports = (mongoose, UserRepository) => {
 
     let RestaurantRepository = class {
 
-        static getAll() {
-            return Restaurant.find();
+        static getAll(owner) {
+            if (!owner) {     
+                return Restaurant.find();
+            }else {           
+                return Restaurant.find({owner});
+            }
+            
         }
 
         static getOne(id) {
