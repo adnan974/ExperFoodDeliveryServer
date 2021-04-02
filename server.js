@@ -14,9 +14,11 @@ app.use(bodyParser.json());
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, PATCH, PUT, POST, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Headers, Authorization, X-Requested-With');
     next();
 });
+
 
 app.use("/api", require("./app/routes"));
 
@@ -29,4 +31,4 @@ swagger({
 
 app.listen(config.port, ()=> {
     console.log( `Listening on port ${config.port}`);
-} )
+})

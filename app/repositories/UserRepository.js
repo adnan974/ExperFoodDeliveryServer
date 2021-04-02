@@ -49,11 +49,12 @@ module.exports = (mongoose) => {
             userUpdated.address ? user.address = userUpdated.address : user.address = user.address;
             userUpdated.role ? user.role = userUpdated.role : user.role = user.role;
             userUpdated.email ? user.email = userUpdated.email : user.email = user.email;
-            userUpdated.password ? user.password = userUpdated.password : user.password = user.password;
+            //userUpdated.password ? user.password = userUpdated.password : user.password = user.password;
             userUpdated.CP ? user.CP = userUpdated.CP : user.CP = user.CP;
             userUpdated.city ? user.city = userUpdated.city : user.city = user.city;
             userUpdated.phone ? user.phone = userUpdated.phone : user.phone = user.phone;
-            return User.updateOne({ _id: id }, user)
+            console.log(userUpdated);
+            return User.updateOne({ _id: id }, userUpdated)
         }
     
     }
