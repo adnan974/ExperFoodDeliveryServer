@@ -7,10 +7,10 @@ module.exports = (mongoose, UserRepository) => {
     let RestaurantRepository = class {
 
         static getAll(owner) {
-            if (!owner) {     
-                return Restaurant.find();
-            }else {           
+            if (owner && owner!=undefined) {     
                 return Restaurant.find({owner});
+            }else {           
+                return Restaurant.find();
             }
             
         }
@@ -36,6 +36,7 @@ module.exports = (mongoose, UserRepository) => {
                 return response;
             })
         }
+
 
         //Todo à modifier
         static async update(id, restaurantUpdated) {
