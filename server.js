@@ -5,7 +5,7 @@ const config = require('./config');
 
 const app = express();
 const swagger = require('express-swagger-generator')(app);
-
+app.use(express.static('public'));
 
 app.use(bodyParser.urlencoded({
     extended: true

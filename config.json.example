@@ -1,8 +1,9 @@
 {
     "rootAPI": "/api/",
+    "host": "http://localhost:5000",
     "port": 5000,
     "jwtConfig": {        
-        "secret" : "your_secret",
+        "secret" : "your_key",
         "iss" : "http://localhost:5000",
         "expiresIn" : "1h"
     },    

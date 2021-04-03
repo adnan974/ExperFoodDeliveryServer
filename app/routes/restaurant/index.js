@@ -4,6 +4,20 @@ const { authJwtCheck } = require('../../middlewares/auth-jwt-check');
 const authorize = require('../../middlewares/auth-role-check');
 const { body, validationResult } = require('express-validator');
 const Role = require('../../models/role');
+const multer = require('multer');
+const path = require('path');
+const {host} = require('../../../config.json')
+
+const storage = multer.diskStorage({
+    destination: (req,file,cb)=>{
+        const path = `tmp/${req.user.id}`;
+      fs.mkdirSync(path, { recursive: true });
+        cb(null, path)
+       
+    }
+})
+const upload = multer({ storage : storage });
+var fs = require('fs')
 
 
 RestaurantRouter.route("/")
@@ -19,10 +33,10 @@ RestaurantRouter.route("/")
      */
     .get((req, res) => {
         RestaurantRepository.getAll(req.query.owner)
-            .then((response) => {               
+            .then((response) => {
                 res.json({ success: true, data: response })
             })
-            .catch((err) => {           
+            .catch((err) => {
                 console.error(err)
                 res.json({ success: false, message: err })
             })
@@ -41,6 +55,8 @@ RestaurantRouter.route("/")
     .post(
         authJwtCheck,
         authorize([Role.Restorer, Role.Admin]),
+        upload.array('image', 3),
+
         body('name').not().isEmpty(),
         body('description').not().isEmpty(),
         body('address').not().isEmpty(),
@@ -50,8 +66,27 @@ RestaurantRouter.route("/")
                 if (!errors.isEmpty()) {
                     return res.status(400).json({ errors: errors.array() });
                 };
-                RestaurantRepository.create(req.body, req.user.id)
-                    .then((response) => {
+                RestaurantRepository.create(req.body, req.user.id, req.files)
+                    .then((restaurant) => {
+                        let destinationPath = `images/restaurants/${restaurant._id}`;
+                        fs.mkdirSync(`public/${destinationPath}`, { recursive: true });
+                        req.files.forEach(element => {
+                            fs.rename(`${element.path}`, `public/${destinationPath}/${element.originalname}`, (err) => {
+                                if (err) {
+                                    console.error(err)                                   
+                                } 
+                            }) 
+                        });                        
+                        let arrayImages = fs.readdirSync(`public/${destinationPath}`, async (err,files)=>{
+                        if(err){
+                            console.error(err);
+                        }                            
+                    })
+            
+                    let mainPhotoUrl = `${host}/${destinationPath}/${arrayImages[0]}`; 
+                        return RestaurantRepository.update(restaurant._id, {mainPhotoUrl});                        
+                    })
+                    .then((response)=>{         
                         res.status(201).json({ success: true, data: response, message: 'Restaurant created' })
                     })
                     .catch((err) => {
@@ -75,8 +110,28 @@ RestaurantRouter.route('/:id')
      */
     .get((req, res) => {
         RestaurantRepository.getOne(req.params.id)
-            .then((response) => {
-                res.json({ success: true, data: response })
+            .then((response) => { 
+
+                let folderPath = `images/restaurants/${response._id}/`;
+                    let arrayImages = fs.readdirSync(folderPath, async (err,files)=>{
+                        if(err){
+                            console.error(err);
+                        }                      
+                    }) 
+                    arrayImages = arrayImages.map((image)=>{return `${host}/${folderPath}/${image}` })                   
+
+                    let data = {
+                        _id : response._id,
+                        name:response.name,
+                        description : response.description,
+                        address : response.address,
+                        menu : response.menu,
+                        owner : response.owner,
+                        menus : response.menu,
+                        photosUrl : arrayImages
+                    }
+
+                res.json({ success: true, data: data })
             })
             .catch((err) => {
                 console.error(err)
