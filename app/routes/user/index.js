@@ -89,7 +89,7 @@ UserRouter.route("/:id")
         UserRepository
             .update(req.params.id, req.body)
             .then(response => {
-                res.json({ success: true, message: 'User updated', message: response })
+                res.json({ success: true, message: 'User updated', data: response })
             })
             .catch((err) => {
                 console.error(err)
