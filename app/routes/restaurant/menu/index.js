@@ -4,6 +4,19 @@ const { authJwtCheck } = require('../../../middlewares/auth-jwt-check');
 const authorize = require('../../../middlewares/auth-role-check');
 const { body, validationResult } = require('express-validator');
 const Role = require('../../../models/role');
+const multer = require('multer');
+const {host} = require('../../../../config.json');
+
+const storage = multer.diskStorage({
+    destination: (req,file,cb)=>{
+        const path = `tmp/${req.user.id}`;
+      fs.mkdirSync(path, { recursive: true });
+        cb(null, path)
+       
+    }
+})
+const upload = multer({ storage : storage });
+var fs = require('fs')
 
 
 MenuRouter.route('/')
@@ -21,7 +34,7 @@ MenuRouter.route('/')
     .get((req, res) => {
         MenuRepository.getAllRestaurantMenu(req.params.restaurantId)
             .then(response => {
-                return res.json(response);
+                return res.json({ succes: true, data: response });
             })
             .catch(err => {
                 console.error(err)
@@ -43,6 +56,7 @@ MenuRouter.route('/')
     .post(
         authJwtCheck,
         authorize([Role.Restorer]),
+        upload.array('image', 3),
         body('name').not().isEmpty(),
         body('description').not().isEmpty(),
         body('price').not().isEmpty(),
@@ -52,7 +66,11 @@ MenuRouter.route('/')
                 return res.status(400).json({ errors: errors.array() });
             };
 
-            MenuRepository.create(req.body, req.params.restaurantId)
+            // conversion du champ 'price' en type number (si la requête est un formData tous les champs sont de type string ou File)
+            let data = req.body;
+            data.price = +data.price;
+
+            MenuRepository.create(data, req.params.restaurantId)
                 .then(response => {
                     res.status(201).json({ succes: true, data: response });
                 })

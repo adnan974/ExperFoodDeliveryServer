@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const { response } = require('express');
 
 module.exports = (mongoose) => {   
 
@@ -41,20 +42,34 @@ module.exports = (mongoose) => {
             return User.findOneAndUpdate({_id: userId},  {$push: {restaurants: restaurantId}}, { new: true })
         }
 
-        static async update(id, userUpdated) {
+        static async update(userId, userToUpdate) {
 
-            let user = await User.findById(id);
-            userUpdated.lastname ? user.lastname = userUpdated.lastname : user.lastname = user.lastname;
-            userUpdated.firstname ? user.firstname = userUpdated.firstname : user.firstname = user.firstname;
-            userUpdated.address ? user.address = userUpdated.address : user.address = user.address;
-            userUpdated.role ? user.role = userUpdated.role : user.role = user.role;
-            userUpdated.email ? user.email = userUpdated.email : user.email = user.email;
-            //userUpdated.password ? user.password = userUpdated.password : user.password = user.password;
-            userUpdated.CP ? user.CP = userUpdated.CP : user.CP = user.CP;
-            userUpdated.city ? user.city = userUpdated.city : user.city = user.city;
-            userUpdated.phone ? user.phone = userUpdated.phone : user.phone = user.phone;
-            console.log(userUpdated);
-            return User.updateOne({ _id: id }, userUpdated)
+            return User.findOneAndUpdate(
+                {_id: userId},
+                {
+                    lastname: userToUpdate.lastname,
+                    firstname: userToUpdate.firstname,
+                    address: userToUpdate.address,
+                    CP: userToUpdate.CP,
+                    city: userToUpdate.city,
+                    phone: userToUpdate.phone,
+                })    
+            
+        }
+
+        static getAllUserMenus(id){
+            return User.findOne({_id:id}).populate({
+                path:"restaurants",
+                populate : {
+                    path:"menus"
+                }
+            }).then((userWithRestaurantsWithMenus)=>{  
+                return userWithRestaurantsWithMenus.restaurants.reduce((acc,restaurant)=>{
+                    return [...acc,...restaurant.menus]
+                },[])                
+            }) 
+               
+          
         }
     
     }

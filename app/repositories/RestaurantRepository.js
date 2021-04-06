@@ -6,17 +6,18 @@ module.exports = (mongoose, UserRepository) => {
 
     let RestaurantRepository = class {
 
-        static getAll(owner) {
-            if (owner && owner!=undefined) {     
+        static getAll(owner = null) {
+
+            if (owner && owner!=undefined &&  owner!=null)  {                   
                 return Restaurant.find({owner});
-            }else {           
+            }else {                     
                 return Restaurant.find();
             }
             
         }
 
         static getOne(id) {
-            return Restaurant.findById(id);
+            return Restaurant.findById(id).populate('menus');
         }
 
         static create(restaurantData, userId) {
