@@ -32,7 +32,7 @@ UserRouter.route("/")
      * @group User - user 
      * @route POST /users
      * @param {UserRegisterDto.model} user.body.required  
-     * @returns {object} 201 - An object with a list of users
+     * @returns {object} 201 - An object with a the created user
      * @returns {Error}  default - Unexpected error
      * @produces application/json
      * @consumes application/json
@@ -118,5 +118,5 @@ UserRouter.route("/:id")
                 res.json({ success: false, message: err })
             })
     })
-
+UserRouter.use("/:id/menus", require("./menu"));
 module.exports = UserRouter;

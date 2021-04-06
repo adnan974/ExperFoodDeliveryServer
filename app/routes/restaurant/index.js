@@ -31,8 +31,8 @@ RestaurantRouter.route("/")
      * @returns {object} 200 - An object with a list of restaurants
      * @returns {Error}  default - Unexpected error
      */
-    .get((req, res) => {
-        RestaurantRepository.getAll(req.query.owner)
+    .get((req, res) => {      
+        RestaurantRepository.getAll(req.query.owner | null)        
             .then((response) => {
                 res.json({ success: true, data: response })
             })
@@ -113,29 +113,30 @@ RestaurantRouter.route('/:id')
             .then((response) => { 
 
                 let folderPath = `images/restaurants/${response._id}/`;
-                    let arrayImages = fs.readdirSync(folderPath, async (err,files)=>{
+                    let arrayImages = fs.readdirSync(`public/${folderPath}`, async (err,files)=>{
                         if(err){
                             console.error(err);
                         }                      
                     }) 
-                    arrayImages = arrayImages.map((image)=>{return `${host}/${folderPath}/${image}` })                   
+                    arrayImages = arrayImages.map((image)=>{return `${host}/${folderPath}/${image}` }); 
 
                     let data = {
                         _id : response._id,
                         name:response.name,
                         description : response.description,
                         address : response.address,
-                        menu : response.menu,
-                        owner : response.owner,
                         menus : response.menu,
-                        photosUrl : arrayImages
+                        owner : response.owner,
+                        menus : response.menus,
+                        mainPhotoUrl : response.mainPhotoUrl,                        
+                        photosUrls : arrayImages
                     }
 
                 res.json({ success: true, data: data })
             })
             .catch((err) => {
                 console.error(err)
-                res.json({ success: false, message: err })
+                res.status(500).json({ success: false, message: err })
             })
     })
 
