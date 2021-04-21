@@ -46,16 +46,12 @@ module.exports = (mongoose) => {
 
         static async update(userId, userToUpdate) {
 
+            console.log('userId', userId)
+            console.log('userToUpdate', userToUpdate)
+
             return User.findOneAndUpdate(
                 {_id: userId},
-                {
-                    lastname: userToUpdate.lastname,
-                    firstname: userToUpdate.firstname,
-                    address: userToUpdate.address,
-                    CP: userToUpdate.CP,
-                    city: userToUpdate.city,
-                    phone: userToUpdate.phone,
-                })    
+                userToUpdate)    
             
         }
 
