@@ -34,16 +34,16 @@
 module.exports = (mongoose) => {
 
     return mongoose && mongoose.model('User', mongoose.Schema({
-        avatar: { type: String, required: false },
-        lastname: { type: String, required: true },
-        firstname: { type: String, required: true },
-        role: { type: String, required: true },
-        email: { type: String, unique: true, required: true, dropDups: true },
-        password: { type: String, unique: false, required: false },
-        address: { type: String, required: false },
-        CP: { type: String, required: false },
-        city: String,
-        phone: String,
+        avatar: { type: String, required: false, trim: true },
+        lastname: { type: String, required: true, trim: true },
+        firstname: { type: String, required: true, trim: true },
+        role: { type: String, required: true, trim: true },
+        email: { type: String, unique: true, required: true, dropDups: true, immutable: true, trim: true },
+        password: { type: String, unique: false, required: false, trim: true },
+        address: { type: String, required: false, trim: true },
+        CP: { type: String, required: false, trim: true },
+        city: { type: String, required: false, trim: true },
+        phone: { type: String, required: false, trim: true },
         restaurants: {
             type: [{
                 type: mongoose.Schema.Types.ObjectId,
