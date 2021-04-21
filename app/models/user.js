@@ -34,13 +34,14 @@
 module.exports = (mongoose) => {
 
     return mongoose && mongoose.model('User', mongoose.Schema({
+        avatar: { type: String, required: false },
         lastname: { type: String, required: true },
         firstname: { type: String, required: true },
         role: { type: String, required: true },
         email: { type: String, unique: true, required: true, dropDups: true },
-        password: { type: String, unique: true, required: true },
-        address: { type: String, required: true },
-        CP: { type: String, required: true },
+        password: { type: String, unique: false, required: false },
+        address: { type: String, required: false },
+        CP: { type: String, required: false },
         city: String,
         phone: String,
         restaurants: {
