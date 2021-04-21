@@ -1,9 +1,9 @@
 {
     "rootAPI": "/api/",
-    "host": "http://localhost:5000",
+    "host": "http://host:port",
     "port": 5000,
     "jwtConfig": {        
-        "secret" : "your_key",
+        "secret" : "your_secret",
         "iss" : "http://localhost:5000",
         "expiresIn" : "1h"
     },    
@@ -22,6 +22,9 @@
             "useCreateIndex" : true,
             "useFindAndModify" : false 
         } 
+    },
+    "googleAuth":{
+        "clientId" : "your_client_id"
     },
     "swagger":  {
         "swaggerDefinition": {

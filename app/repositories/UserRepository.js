@@ -19,9 +19,11 @@ module.exports = (mongoose) => {
             return User.findOne(params);
         }
     
-        static async create(userData) {      
-
-            userData.password =  await bcrypt.hash(userData.password, 10);
+        static async create(userData) {
+            
+            if(userData.password){
+                userData.password =  await bcrypt.hash(userData.password, 10);
+            }           
     
             let user = new User({
             firstname : userData.firstname,

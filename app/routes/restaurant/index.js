@@ -8,6 +8,7 @@ const multer = require('multer');
 const path = require('path');
 const {host} = require('../../../config.json')
 
+
 const storage = multer.diskStorage({
     destination: (req,file,cb)=>{
         const path = `tmp/${req.user.id}`;
@@ -31,14 +32,14 @@ RestaurantRouter.route("/")
      * @returns {object} 200 - An object with a list of restaurants
      * @returns {Error}  default - Unexpected error
      */
-    .get((req, res) => {      
+    .get((req, res) => {
         RestaurantRepository.getAll(req.query.owner | null)        
-            .then((response) => {
+            .then((response) => {               
                 res.json({ success: true, data: response })
             })
-            .catch((err) => {
+            .catch((err) => {    
                 console.error(err)
-                res.json({ success: false, message: err })
+                res.status(500).json({ success: false, message: err })
             })
     })
 
@@ -56,7 +57,6 @@ RestaurantRouter.route("/")
         authJwtCheck,
         authorize([Role.Restorer, Role.Admin]),
         upload.array('image', 3),
-
         body('name').not().isEmpty(),
         body('description').not().isEmpty(),
         body('address').not().isEmpty(),
@@ -91,7 +91,7 @@ RestaurantRouter.route("/")
                     })
                     .catch((err) => {
                         console.error(err)
-                        res.json({ success: false, message: err })
+                        res.status(500).json({ success: false, message: err })
                     })
             }
         })
@@ -184,6 +184,7 @@ RestaurantRouter.route('/:id')
                 res.json({ success: false, message: err })
             })
     })
+   
 
 RestaurantRouter.use("/:restaurantId/menus", require("./menu"));
 module.exports = RestaurantRouter;
