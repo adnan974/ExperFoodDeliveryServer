@@ -68,17 +68,56 @@ MenuRouter.route('/')
 
             // conversion du champ 'price' en type number (si la requête est un formData tous les champs sont de type string ou File)
             let data = req.body;
-            data.price = +data.price;
-
+            data.price = +data.price;           
+            let createdMenu = null;
+            let destinationPath = null;
             MenuRepository.create(data, req.params.restaurantId)
-                .then(response => {
-                    res.status(201).json({ succes: true, data: response });
+                .then((menu) => {
+                    createdMenu = menu;                   
+                    destinationPath = `images/restaurants/${req.params.restaurantId}/menus/${createdMenu._id}`;
+                    return fs.promises.mkdir(`public/${destinationPath}`, { recursive: true });
                 })
-                .catch(error => {
-                    console.error(error);
-                    res.status(500).send({ success: false, message: error });
-                })
+                .then(() => {
+                    return new Promise((resolve, reject) => {
+                        if (req.files && req.files.length > 0) {
+                            req.files.forEach((element, index) => {
+                                fs.rename(`${element.path}`, `public/${destinationPath}/${element.originalname}`, (err) => {
+                                    if (err) {
+                                        reject(err)
+                                    } else if (index === req.files.length - 1) {
+                                        resolve()
+                                    }
+                                })
+                            });
 
+                        } else (resolve());
+
+                    })
+                })
+                .then(() => {
+                    return fs.promises.readdir(`public/${destinationPath}`);
+                })
+                .then((files) => {
+                    if (files && files.length > 0) {
+                        let mainPhotoUrl = `${host}/${destinationPath}/${files[0]}`;
+                        return MenuRepository.update(createdMenu._id, { mainPhotoUrl });
+                    } else {
+                        return null;
+                    }
+                })
+                .then((response) => {                  
+                    res.status(201).json({ success: true, data: response, message: 'Menu created' })
+                })
+                .catch((error) => {
+                    console.error(error)
+                    switch (error.code) {
+                        case 11000:
+                            res.status(500).json({ success: false, error: error, message: `Le champs ${Object.keys(error.keyPattern)[0]} est déjà utilisé` })
+                            break;
+                        default:
+                            res.status(500).json({ success: false, error: error })
+                    }
+                });
         })
 
 MenuRouter.route('/:menuId')

@@ -41,7 +41,7 @@ module.exports = (mongoose) => {
         email: { type: String, unique: true, required: true, dropDups: true, immutable: true, trim: true },
         password: { type: String, unique: false, required: false, trim: true },
         address: { type: String, required: false, trim: true },
-        CP: { type: String, required: false, trim: true },
+        CP: { type: String, required: false, trim: true, minlength: 5, maxlength: 5 },
         city: { type: String, required: false, trim: true },
         phone: { type: String, required: false, trim: true },
         restaurants: {

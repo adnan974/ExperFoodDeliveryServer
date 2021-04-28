@@ -6,19 +6,20 @@ const { body, validationResult } = require('express-validator');
 const Role = require('../../models/role');
 const multer = require('multer');
 const path = require('path');
-const {host} = require('../../../config.json')
+const { host } = require('../../../config.json')
 
 
 const storage = multer.diskStorage({
-    destination: (req,file,cb)=>{
+    destination: (req, file, cb) => {
         const path = `tmp/${req.user.id}`;
-      fs.mkdirSync(path, { recursive: true });
+        fs.mkdirSync(path, { recursive: true });
         cb(null, path)
-       
+
     }
 })
-const upload = multer({ storage : storage });
-var fs = require('fs')
+const upload = multer({ storage: storage });
+var fs = require('fs');
+const { resolve } = require("path");
 
 
 RestaurantRouter.route("/")
@@ -33,11 +34,11 @@ RestaurantRouter.route("/")
      * @returns {Error}  default - Unexpected error
      */
     .get((req, res) => {
-        RestaurantRepository.getAll(req.query.owner | null)        
-            .then((response) => {               
+        RestaurantRepository.getAll(req.query.owner | null)
+            .then((response) => {
                 res.json({ success: true, data: response })
             })
-            .catch((err) => {    
+            .catch((err) => {
                 console.error(err)
                 res.status(500).json({ success: false, message: err })
             })
@@ -60,39 +61,63 @@ RestaurantRouter.route("/")
         body('name').not().isEmpty(),
         body('description').not().isEmpty(),
         body('address').not().isEmpty(),
-        (req, res) => {
+        body('city').not().isEmpty(),
+        body('cp').not().isEmpty(),
+        (req, res) => {          
             if (req.body) {
                 const errors = validationResult(req);
                 if (!errors.isEmpty()) {
                     return res.status(400).json({ errors: errors.array() });
                 };
+                let createdRestaurant = null;
+                let destinationPath = null;
                 RestaurantRepository.create(req.body, req.user.id, req.files)
                     .then((restaurant) => {
-                        let destinationPath = `images/restaurants/${restaurant._id}`;
-                        fs.mkdirSync(`public/${destinationPath}`, { recursive: true });
-                        req.files.forEach(element => {
-                            fs.rename(`${element.path}`, `public/${destinationPath}/${element.originalname}`, (err) => {
-                                if (err) {
-                                    console.error(err)                                   
-                                } 
-                            }) 
-                        });                        
-                        let arrayImages = fs.readdirSync(`public/${destinationPath}`, async (err,files)=>{
-                        if(err){
-                            console.error(err);
-                        }                            
+                        createdRestaurant = restaurant;
+                        destinationPath = `images/restaurants/${restaurant._id}`;
+                        return fs.promises.mkdir(`public/${destinationPath}`, { recursive: true });
                     })
-            
-                    let mainPhotoUrl = `${host}/${destinationPath}/${arrayImages[0]}`; 
-                        return RestaurantRepository.update(restaurant._id, {mainPhotoUrl});                        
+                    .then(() => {
+                        return new Promise((resolve, reject) => {
+                            if (req.files && req.files.length > 0) {
+                                req.files.forEach((element, index) => {
+                                    fs.rename(`${element.path}`, `public/${destinationPath}/${element.originalname}`, (err) => {
+                                        if (err) {
+                                            reject(err)
+                                        } else if (index === req.files.length - 1) {
+                                            resolve()
+                                        }
+                                    })
+                                });
+
+                            } else (resolve());
+
+                        })
                     })
-                    .then((response)=>{         
+                    .then(() => {
+                        return fs.promises.readdir(`public/${destinationPath}`);
+                    })
+                    .then((files) => {
+                        if (files && files.length > 0) {
+                            let mainPhotoUrl = `${host}/${destinationPath}/${files[0]}`;
+                            return RestaurantRepository.update(createdRestaurant._id, { mainPhotoUrl });
+                        } else {
+                            return null;
+                        }
+                    })
+                    .then((response) => {
                         res.status(201).json({ success: true, data: response, message: 'Restaurant created' })
                     })
-                    .catch((err) => {
-                        console.error(err)
-                        res.status(500).json({ success: false, message: err })
-                    })
+                    .catch((error) => {
+                        console.error(error)
+                        switch (error.code) {
+                            case 11000:
+                                res.status(500).json({ success: false, error: error, message: `Le champs ${Object.keys(error.keyPattern)[0]} est déjà utilisé` })
+                                break;
+                            default:
+                                res.status(500).json({ success: false, error: error })
+                        }
+                    });
             }
         })
 
@@ -110,33 +135,32 @@ RestaurantRouter.route('/:id')
      */
     .get((req, res) => {
         RestaurantRepository.getOne(req.params.id)
-            .then((response) => { 
+            .then((response) => {
 
                 let folderPath = `images/restaurants/${response._id}/`;
-                    let arrayImages = fs.readdirSync(`public/${folderPath}`, async (err,files)=>{
-                        if(err){
-                            console.error(err);
-                        }                      
-                    }) 
-                    arrayImages = arrayImages.map((image)=>{return `${host}/${folderPath}/${image}` }); 
-
-                    let data = {
-                        _id : response._id,
-                        name:response.name,
-                        description : response.description,
-                        address : response.address,
-                        menus : response.menu,
-                        owner : response.owner,
-                        menus : response.menus,
-                        mainPhotoUrl : response.mainPhotoUrl,                        
-                        photosUrls : arrayImages
+                let arrayImages = fs.readdirSync(`public/${folderPath}`, async (err, files) => {
+                    if (err) {
+                        console.error(err);
                     }
+                })
+                arrayImages = arrayImages.map((image) => { return `${host}/${folderPath}/${image}` });
+
+                let data = {
+                    _id: response._id,
+                    name: response.name,
+                    description: response.description,
+                    address: response.address,
+                    menus: response.menu,
+                    owner: response.owner,
+                    menus: response.menus,
+                    mainPhotoUrl: response.mainPhotoUrl,
+                    photosUrls: arrayImages
+                }
 
                 res.json({ success: true, data: data })
             })
-            .catch((err) => {
-                console.error(err)
-                res.status(500).json({ success: false, message: err })
+            .catch((error) => {
+                console.error(error)
             })
     })
 
@@ -184,7 +208,7 @@ RestaurantRouter.route('/:id')
                 res.json({ success: false, message: err })
             })
     })
-   
+
 
 RestaurantRouter.use("/:restaurantId/menus", require("./menu"));
 module.exports = RestaurantRouter;

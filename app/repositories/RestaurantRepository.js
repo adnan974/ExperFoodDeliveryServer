@@ -28,6 +28,8 @@ module.exports = (mongoose, UserRepository) => {
                 name: restaurantData.name,
                 address: restaurantData.address,
                 description: restaurantData.description,
+                city: restaurantData.city,
+                cp: restaurantData.cp,
                 mainPhotoUrl: restaurantData.mainPhotoUrl,
                 owner: userId
             }).then((createdRestaurant) => {

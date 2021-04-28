@@ -45,14 +45,9 @@ module.exports = (mongoose) => {
         }
 
         static async update(userId, userToUpdate) {
-
-            console.log('userId', userId)
-            console.log('userToUpdate', userToUpdate)
-
             return User.findOneAndUpdate(
                 {_id: userId},
-                userToUpdate)    
-            
+                userToUpdate)            
         }
 
         static getAllUserMenus(id){

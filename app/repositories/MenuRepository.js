@@ -32,7 +32,7 @@ module.exports = (mongoose, RestaurantRepository) => {
             }).then((createdMenu) => {
                 response = createdMenu;
                 return RestaurantRepository.addMenuToRestaurant(restaurantId, createdMenu._id);
-            }).then(() => {
+            }).then(() => {               
                 return response;
             })
         }
@@ -41,6 +41,7 @@ module.exports = (mongoose, RestaurantRepository) => {
             let menu = await Menu.findById(id);
             menuUpdated.name ? menu.name = menuUpdated.name : menu.name = menu.name;
             menuUpdated.description ? menu.description = menuUpdated.description : menu.description = menu.description;
+            menuUpdated.mainPhotoUrl ? menu.mainPhotoUrl = menuUpdated.mainPhotoUrl : menu.mainPhotoUrl = menu.mainPhotoUrl;
             menuUpdated.price ? menu.price = menuUpdated.price : menu.price = menu.price;
 
             return Menu.updateOne({ _id: id }, menu)
