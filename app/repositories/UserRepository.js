@@ -26,6 +26,7 @@ module.exports = (mongoose) => {
             }           
     
             let user = new User({
+            avatar: userData.avatar,
             firstname : userData.firstname,
             lastname : userData.lastname,
             email : userData.email,
