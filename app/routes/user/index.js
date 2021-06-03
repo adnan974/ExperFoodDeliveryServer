@@ -16,7 +16,7 @@ UserRouter.route("/")
      * @produces application/json
      * @consumes application/json
      */
-    .get((req, res) => {
+    .get(authJwtCheck, authorize([Role.Admin]),(req, res) => {
         UserRepository.getAll()
             .then((response) => {
                 res.json({ success: true, data: response })
@@ -63,8 +63,9 @@ UserRouter.route("/:id")
      * @produces application/json
      * @consumes application/json
      */
-    .get((req, res) => {
-        UserRepository.findById(req.params.id)
+    .get(authJwtCheck,(req, res) => {
+        if(req.user.id === req.params.id) {
+            UserRepository.findById(req.params.id)
             .then((response) => {
                 res.json({ success: true, data: response })
             })
@@ -72,6 +73,11 @@ UserRouter.route("/:id")
                 console.error(err)
                 res.json({ success: false, message: err })
             })
+
+        }else {
+            res.status(403).json({ success: false, message: 'Forbidden' })
+        }
+
     })
 
     /**
