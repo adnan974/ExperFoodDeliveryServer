@@ -1,10 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('./config');
+const helmet = require("helmet");
 
 
 const app = express();
 const swagger = require('express-swagger-generator')(app);
+
+app.use(helmet());
 app.use(express.static('public'));
 
 app.use(bodyParser.urlencoded({
