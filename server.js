@@ -7,7 +7,7 @@ const helmet = require("helmet");
 const app = express();
 const swagger = require('express-swagger-generator')(app);
 
-app.use(helmet());
+
 app.use(express.static('public'));
 
 app.use(bodyParser.urlencoded({
@@ -31,7 +31,7 @@ swagger({
     basedir: __dirname, 
     files: ['./app/**/*.js']
 });
-
+app.use(helmet());
 app.listen(config.port, ()=> {
     console.log( `Listening on port ${config.port}`);
 })
