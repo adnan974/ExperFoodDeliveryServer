@@ -15,6 +15,7 @@ UserRouter.route("/")
      * @returns {Error}  default - Unexpected error
      * @produces application/json
      * @consumes application/json
+     * @security JWT
      */
     .get(authJwtCheck, authorize([Role.Admin]),(req, res) => {
         UserRepository.getAll()
@@ -62,6 +63,7 @@ UserRouter.route("/:id")
      * @returns {Error}  default - Unexpected error
      * @produces application/json
      * @consumes application/json
+     * @security JWT
      */
     .get(authJwtCheck,(req, res) => {
         if(req.user.id === req.params.id) {
@@ -112,6 +114,7 @@ UserRouter.route("/:id")
      * @consumes application/json
      * @returns {object} 200 - An object with informations aout the deleted restaurant
      * @returns {Error}  default - Unexpected error
+     * @security JWT
      */
     .delete(authJwtCheck, (req, res) => {
         UserRepository

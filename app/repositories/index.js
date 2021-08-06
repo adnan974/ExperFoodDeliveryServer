@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const {mongoConfig} = require('../../config');
 
-mongoose.connect(mongoConfig.urlmongo, mongoConfig.options);
+//mongoose.connect(mongoConfig.urlmongo, mongoConfig.options);
+mongoose.connect(mongoConfig.urlmongo);
 
 let db = mongoose.connection; 
 db.on('error', console.error.bind(console, 'Erreur lors de la connexion')); 

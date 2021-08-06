@@ -52,10 +52,11 @@ MenuRouter.route('/')
      * @consumes application/json
      * @returns {object} 200 - An object with the created restaurant's menu
      * @returns {Error}  default - Unexpected error
+     * @security JWT
      */
     .post(
         authJwtCheck,
-        authorize([Role.Restorer]),
+        authorize([Role.Restorer,Role.Admin]),
         upload.array('image', 3),
         body('name').not().isEmpty(),
         body('description').not().isEmpty(),
@@ -154,6 +155,7 @@ MenuRouter.route('/:menuId')
      * @returns {Error}  default - Unexpected error
      * @produces application/json
      * @consumes application/json
+     * @security JWT
      */
     .patch(
         authJwtCheck,
@@ -178,6 +180,7 @@ MenuRouter.route('/:menuId')
      * @returns {Error}  default - Unexpected error
      * @produces application/json
      * @consumes application/json
+     * @security JWT
      */
     .delete(authJwtCheck, authorize([Role.Restorer, Role.Admin]), (req, res) => {
         MenuRepository.delete(req.params.menuId)

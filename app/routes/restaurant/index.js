@@ -53,6 +53,7 @@ RestaurantRouter.route("/")
      * @consumes application/json
      * @returns {object} 200 - An object with a list of restaurants
      * @returns {Error}  default - Unexpected error
+     * @security JWT
      */
     .post(
         authJwtCheck,
@@ -174,6 +175,7 @@ RestaurantRouter.route('/:id')
      * @consumes application/json
      * @returns {object} 200 - An object with user a the updated restaurants
      * @returns {Error}  default - Unexpected error
+     * @security JWT
      */
     .patch(authJwtCheck, authorize([Role.Restorer, Role.Admin]), (req, res) => {
         RestaurantRepository
@@ -196,6 +198,7 @@ RestaurantRouter.route('/:id')
      * @consumes application/json
      * @returns {object} 200 - An object with informations about the deleted restaurant
      * @returns {Error}  default - Unexpected error
+     * @security JWT
      */
     .delete(authJwtCheck, authorize([Role.Restorer, Role.Admin]), (req, res) => {
         RestaurantRepository
