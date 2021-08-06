@@ -1,5 +1,9 @@
 # Exper Food Delivery API
 
+#Remarque
+
+- Ce projet a été transféré depuis gitlab vers github. Lien gitLab du projet : https://gitlab.com/Borris974/server-exper-food-delivery
+
 # Pre-requis
 - Installer [Node.js](https://nodejs.org/fr/) 
 - Installer [MongoDB](https://www.mongodb.com/fr-fr) 
