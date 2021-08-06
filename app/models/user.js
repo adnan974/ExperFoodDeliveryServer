@@ -27,7 +27,7 @@
 
 /**
  * @typedef UserLoginDto
- * @property {string} email
+ * @property {string} email 
  * @property {string} password 
  */
 

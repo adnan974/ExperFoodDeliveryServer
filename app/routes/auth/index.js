@@ -14,7 +14,7 @@ AuthRouter.route("/login")
      * Allows a user to authenticate with credentials
      * @group Auth - authentification
      * @route POST /login
-     * @param {UserLoginDto.model} user.body.required 
+     * @param {UserLoginDto.model} user.body.required  Admin Credentials: email: admin@admin.fr  password: administrateur
      * @produces application/json
      * @consumes application/json
      * @returns {object} 200 - An object with user info and JWT
