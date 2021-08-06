@@ -1,0 +1,56 @@
+{
+    "rootAPI": "/api/",
+    "host": "http://host:port",
+    "port": 5000,
+    "jwtConfig": {        
+        "secret" : "your_secret",
+        "iss" : "http://localhost:5000",
+        "expiresIn" : "1h"
+    },    
+    "mongoConfig": {
+        "urlmongo": "",
+        "host": "",
+        "database": "",
+        "user": "",
+        "password": "",
+        "options" : {
+            "socketTimeoutMS" : 3000,
+            "connectTimeoutMS" : 3000,
+            "keepAlive": 3000,            
+            "useNewUrlParser":true,
+            "useUnifiedTopology" :true,
+            "useCreateIndex" : true,
+            "useFindAndModify" : false 
+        } 
+    },
+    "googleAuth":{
+        "clientId" : "your_client_id"
+    },
+    "swagger":  {
+        "swaggerDefinition": {
+            "info": {
+                "description": "NodeJS Server for Exper-Food-Delivery app",
+                "title": "API Exper-Food-Delivery",
+                "version": "1.0.0"
+            },
+            "host": "localhost:5000",
+            "basePath": "/api",
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "schemes": ["http", "https"],
+            "securityDefinitions": {
+                "JWT": {
+                    "type": "apiKey",
+                    "in": "header",
+                    "name": "Authorization",                    
+                    "description": ""
+                }
+   
+            }
+        }
+    },
+    "errors-messages": {},
+    "success-messages": {}
+}
