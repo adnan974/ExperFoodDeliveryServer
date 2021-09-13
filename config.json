@@ -8,7 +8,7 @@
         "expiresIn" : "1h"
     },    
     "mongoConfig": {
-        "urlmongo": "mongodb+srv://adn974:goulamaly@cluster0.ar9jw.mongodb.net/Exper-Food-Delivery?retryWrites=true&w=majority",
+        "urlmongo": "",
         "host": "",
         "database": "",
         "user": "",
