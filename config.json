@@ -33,7 +33,7 @@
                 "title": "API Exper-Food-Delivery",
                 "version": "1.0.0"
             },
-            "host": "localhost:5000",
+            "host": "api-exper-food-delivery.herokuapp.com",
             "basePath": "/api",
             "produces": [
                 "application/json",
